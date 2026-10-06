@@ -1,0 +1,33 @@
+﻿@model SaaSMvcClient.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Yönetim Paneli Girişi";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <h3 class="text-center mb-4">SaaS Yönetim Paneli</h3>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger">@ViewBag.Error</div>
+            }
+
+            <form asp-action="Login" method="post">
+                <div class="mb-3">
+                    <label>Firma Kodu / Domain</label>
+                    <input asp-for="FirmDomainOrCode" class="form-control" placeholder="Örn: xfirmasi" required />
+                </div>
+                <div class="mb-3">
+                    <label>E-Posta</label>
+                    <input asp-for="Email" type="email" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label>Şifre</label>
+                    <input asp-for="Password" type="password" class="form-control" required />
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "SaasProje\\SaasProje.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "SaaSMvcClient\\SaaSMvcClient.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

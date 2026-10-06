@@ -1,0 +1,39 @@
+﻿@model List<SaaSMvcClient.Models.OrderViewModel>
+@{
+    ViewData["Title"] = "Sipariş Yönetimi";
+}
+
+<div class="container mt-4">
+    <h2>Sipariş Yönetimi</h2>
+    <p>Bu sayfada sadece sizin firmanıza ait veriler listelenmektedir.</p>
+    <hr />
+
+    <table class="table table-striped table-bordered mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Sipariş Numarası</th>
+                <th>Tarih</th>
+                <th>Toplam Tutar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var order in Model)
+                {
+                    <tr>
+                        <td>@order.OrderNumber</td>
+                        <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@order.TotalAmount.ToString("C") ₺</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3" class="text-center text-danger">Firmanıza ait henüz bir sipariş bulunmuyor.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

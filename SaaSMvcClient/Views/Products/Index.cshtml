@@ -1,0 +1,40 @@
+﻿@model List<SaaSMvcClient.Models.ProductViewModel>
+@{
+    ViewData["Title"] = "Ürünlerimiz";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Mağaza Vitrini</h2>
+
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var product in Model)
+            {
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <!-- Ürün için temsili bir görsel alanı -->
+                        <div class="bg-light text-center py-5">
+                            <h1 class="text-secondary"><i class="bi bi-box"></i></h1>
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">@product.Name</h5>
+                            <h4 class="text-primary mt-3">@product.Price.ToString("C") ₺</h4>
+                        </div>
+                        <div class="card-footer bg-white border-0 pb-3 text-center">
+                            <button class="btn btn-outline-success w-100">İncele</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    Mağazanıza ait henüz bir ürün bulunmuyor. Yeni ürün ekleyerek satışa başlayabilirsiniz!
+                </div>
+            </div>
+        }
+    </div>
+</div>
