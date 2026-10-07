@@ -6,6 +6,22 @@
 <div class="container mt-4">
     <h2 class="mb-4">Mağaza Vitrini</h2>
 
+    
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <form method="get" asp-action="Index" class="d-flex">
+                <input type="text" name="keyword" value="@ViewBag.Keyword" class="form-control me-2" placeholder="Vitrin içinde akıllı arama yapın (Örn: far, kulaklık)...">
+                <button type="submit" class="btn btn-primary px-4">Ara</button>
+
+                
+                @if (!string.IsNullOrEmpty(ViewBag.Keyword as string))
+                {
+                    <a asp-action="Index" class="btn btn-outline-secondary ms-2">Temizle</a>
+                }
+            </form>
+        </div>
+    </div>
+
     <div class="row">
         @if (Model != null && Model.Any())
         {
@@ -13,7 +29,7 @@
             {
                 <div class="col-md-3 mb-4">
                     <div class="card h-100 shadow-sm">
-                        <!-- Ürün için temsili bir görsel alanı -->
+                        
                         <div class="bg-light text-center py-5">
                             <h1 class="text-secondary"><i class="bi bi-box"></i></h1>
                         </div>
@@ -32,7 +48,7 @@
         {
             <div class="col-12">
                 <div class="alert alert-info text-center">
-                    Mağazanıza ait henüz bir ürün bulunmuyor. Yeni ürün ekleyerek satışa başlayabilirsiniz!
+                    Mağazanıza ait henüz bir ürün bulunmuyor veya aradığınız kelimeyle eşleşen bir ürün bulunamadı.
                 </div>
             </div>
         }

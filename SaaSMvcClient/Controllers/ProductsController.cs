@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace SaaSMvcClient.Controllers
 {
-    [Authorize(AuthenticationSchemes = "CookieAuth")] 
+    [Authorize(AuthenticationSchemes = "CookieAuth")]
     public class ProductsController : Controller
     {
         private readonly HttpClient _httpClient;
@@ -17,17 +17,30 @@ namespace SaaSMvcClient.Controllers
             _httpClient = httpClient;
         }
 
-        // ---------------- YENİ EKLENEN VİTRİN BÖLÜMÜ ----------------
         
+
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string keyword)
         {
             // 1. Kullanıcının (Müşterinin) yetki token'ını al
             var token = User.FindFirst("jwt_token")?.Value;
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            // 2. API'den SADECE bu firmanın ürünlerini iste
-            var response = await _httpClient.GetAsync("https://localhost:7061/api/Products");
+            HttpResponseMessage response;
+
+            // 2. Arama kelimesi (keyword) var mı kontrol et
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                // Arama kutusu doluysa: ElasticSearch destekli akıllı arama API'sine git
+                ViewBag.Keyword = keyword;
+                response = await _httpClient.GetAsync($"https://localhost:7061/api/Products/search?keyword={keyword}");
+            }
+            else
+            {
+                // Arama kutusu boşsa: Normal ürün listeleme (Redis) API'sine git
+                ViewBag.Keyword = "";
+                response = await _httpClient.GetAsync("https://localhost:7061/api/Products");
+            }
 
             if (response.IsSuccessStatusCode)
             {
@@ -43,14 +56,14 @@ namespace SaaSMvcClient.Controllers
             // Hata olursa veya ürün yoksa boş liste gönder
             return View(new List<ProductViewModel>());
         }
-        
+
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        // Kullanıcı "Kaydet" butonuna bastığında çalışacak kod
+        
         [HttpPost]
         public async Task<IActionResult> Create(ProductViewModel model)
         {
@@ -66,7 +79,7 @@ namespace SaaSMvcClient.Controllers
 
             if (response.IsSuccessStatusCode)
             {
-                // İşlem başarılıysa ekranda yeşil bir mesaj göster
+                
                 TempData["Message"] = $"{model.Name} ürünü mağazanıza başarıyla eklendi!";
                 return RedirectToAction("Create");
             }

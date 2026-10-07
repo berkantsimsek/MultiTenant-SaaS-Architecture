@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="~/SaaSMvcClient.styles.css" asp-append-version="true" />
 </head>
 <body class="bg-light">
-    <!-- Arka planı hafif gri yaptık, böylece beyaz kartlar (ürünler) daha şık duracak -->
+    
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-4 py-3">
             <div class="container-fluid">
-                <!-- Sol Üstteki Logo / Marka Adı -->
+               
                 <a class="navbar-brand fw-bold text-primary fs-4" asp-area="" asp-controller="Products" asp-action="Index">🚀 SaaS Panel</a>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -22,25 +22,31 @@
                 </button>
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <!-- Sol Taraftaki Ana Menü Butonları -->
-                    <ul class="navbar-nav flex-grow-1 ms-4">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark fw-semibold px-3" asp-area="" asp-controller="Products" asp-action="Index">🛍️ Mağaza Vitrini</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark fw-semibold px-3" asp-area="" asp-controller="Products" asp-action="Create">➕ Ürün Ekle</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark fw-semibold px-3" asp-area="" asp-controller="Orders" asp-action="Index">📦 Siparişlerim</a>
-                        </li>
-                    </ul>
 
-                    <!-- Sağ Taraftaki Çıkış Butonu -->
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="btn btn-outline-danger fw-bold px-4" asp-area="" asp-controller="Auth" asp-action="Login">🚪 Çıkış Yap</a>
-                        </li>
-                    </ul>
+                    
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                       
+                        <ul class="navbar-nav flex-grow-1 ms-4">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark fw-semibold px-3" asp-area="" asp-controller="Products" asp-action="Index">🛍️ Mağaza Vitrini</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark fw-semibold px-3" asp-area="" asp-controller="Products" asp-action="Create">➕ Ürün Ekle</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark fw-semibold px-3" asp-area="" asp-controller="Orders" asp-action="Index">📦 Siparişlerim</a>
+                            </li>
+                        </ul>
+
+                        
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="btn btn-outline-danger fw-bold px-4" asp-area="" asp-controller="Auth" asp-action="Logout">🚪 Çıkış Yap</a>
+                            </li>
+                        </ul>
+                    }
+
                 </div>
             </div>
         </nav>
@@ -48,7 +54,6 @@
 
     <div class="container">
         <main role="main" class="pb-5">
-            
             @RenderBody()
         </main>
     </div>

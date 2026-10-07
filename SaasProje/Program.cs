@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Elastic.Clients.Elasticsearch; 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SaaSProje.Data;
@@ -7,19 +8,34 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Temel Servisler
+// --- 1. REDİS ÖNBELLEK (CACHE) BAĞLANTISI ---
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetSection("RedisSettings:ConnectionString").Value;
+});
+
+// --- 2. ELASTICSEARCH (ARAMA MOTORU) BAĞLANTISI ---
+var elasticUrl = builder.Configuration.GetSection("ElasticSearchSettings:Url").Value;
+var elasticSettings = new ElasticsearchClientSettings(new Uri(elasticUrl))
+    .DefaultIndex(builder.Configuration.GetSection("ElasticSearchSettings:DefaultIndex").Value);
+
+var elasticClient = new ElasticsearchClient(elasticSettings);
+builder.Services.AddSingleton(elasticClient); 
+
+
+// 3. Temel Servisler
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// 2. Tenant (Firma) Yakalama Servisleri
+// 4. Tenant (Firma) Yakalama Servisleri
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentTenantService, CurrentTenantService>();
 
-// 3. Veritabanı Servisi
+// 5. Veritabanı Servisi
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 4. JWT Kimlik Doğrulama Servisi
+// 6. JWT Kimlik Doğrulama Servisi
 var jwtKey = Encoding.ASCII.GetBytes("super_gizli_cok_uzun_jwt_anahtari_buraya_yazilmalidir_12345");
 builder.Services.AddAuthentication(options =>
 {
@@ -39,7 +55,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// 5. Swagger Token (Authorize) Arayüzü Ayarları
+// 7. Swagger Token (Authorize) Arayüzü Ayarları
 builder.Services.AddSwaggerGen(c =>
 {
     c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
@@ -77,7 +93,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 
 app.UseAuthentication();
 app.UseAuthorization();
